@@ -15,7 +15,7 @@ RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
             'polcoinaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
         ))
-SUBSIDY_FUNC = lambda height: 50*100000000 >> (height + 1)//210000
+SUBSIDY_FUNC = lambda height: 50*100000000 >> (height + 1)//2100000
 POW_FUNC = data.hash256
 BLOCK_PERIOD = 60 # s
 SYMBOL = 'PLC'
