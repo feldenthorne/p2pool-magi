@@ -9,7 +9,7 @@ from p2pool.util import pack
 
 P2P_PREFIX = '336b59c1'.decode('hex')
 P2P_PORT = 8080
-ADDRESS_VERSION = 0
+ADDRESS_VERSION = 33
 RPC_PORT = 8079
 RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue('ecurrencyaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
