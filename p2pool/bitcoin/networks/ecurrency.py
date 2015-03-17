@@ -16,7 +16,7 @@ RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue('ecurrencya
         ))
 SUBSIDY_FUNC = lambda height: 100*100000000 >> (height + 1)//420000
 POW_FUNC = data.hash256
-BLOCK_PERIOD = 600 # s
+BLOCK_PERIOD = 180 # s
 SYMBOL = 'ISO'
 CONF_FILE_FUNC = lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'ecurrency') if platform.system() == 'Windows' 
 				else os.path.expanduser('~/Library/Application Support/ecurrency/') if platform.system() == 'Darwin' 
