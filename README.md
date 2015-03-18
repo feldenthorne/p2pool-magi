@@ -1,7 +1,7 @@
 Requirements:
 -------------------------
 Generic:
-* Bitcoin >=0.8.5
+* Magi >=1.2.1.1
 * Python >=2.6
 * Twisted >=10.0.0
 * python-argparse (for Python =2.6)
@@ -18,18 +18,36 @@ Windows:
 * Install python win32 api wmi wrapper: https://pypi.python.org/pypi/WMI/#downloads
 * Unzip the files into C:\Python27\Lib\site-packages
 
+Initial Setup for P2Pool:
+-------------------------
+To set up P2Pool for Magi, after you have downloaded the dependencies,
+you must install the Magi hashing code for proof of work:
+
+    cd magi
+    sudo python setup.py install
+    cd ..
+
 Running P2Pool:
 -------------------------
-To use P2Pool, you must be running your own local bitcoind. For standard
+To use P2Pool, you must be running your own local magid. For standard
 configurations, using P2Pool should be as simple as:
 
     python run_p2pool.py
 
-Then run your miner program, connecting to 127.0.0.1 on port 9332 with any
+Then run your miner program, connecting to 127.0.0.1 on port 8232 with any
 username and password.
 
+A sample magi.conf file for magid is shown below:
+
+    daemon=1
+    server=1
+    rpcport=8232
+    rpcallowip=127.0.0.1
+    rpcuser=rpcuser
+    rpcpassword=rpcpass
+
 If you are behind a NAT, you should enable TCP port forwarding on your
-router. Forward port 9333 to the host running P2Pool.
+router. Forward port 8232 to the host running P2Pool.
 
 Run for additional options.
 
@@ -37,26 +55,29 @@ Run for additional options.
 
 Donations towards further development:
 -------------------------
-    1HNeqi3pJRNvXybNX4FKzZgYJsdTSqJTbk
+    forrestv: 1HNeqi3pJRNvXybNX4FKzZgYJsdTSqJTbk
 
 Official wiki:
 -------------------------
 https://en.bitcoin.it/wiki/P2Pool
 
-Alternate web frontend:
+Other Sources:
 -------------------------
-* https://github.com/hardcpp/P2PoolExtendedFrontEnd
+* hardcpp (frontend) https://github.com/hardcpp/P2PoolExtendedFrontEnd
+* amarian12 (p2pool hash algo): https://github.com/amarian12/p2pool-hash-scripts
+* Rav3nPL (combination of p2pool+frontend): https://github.com/Rav3nPL/p2pool-rav
 
-Notes for Litecoin:
+
+Notes for Magi:
 =========================
 Requirements:
 -------------------------
-In order to run P2Pool with the Litecoin network, you would need to build and install the
-ltc_scrypt module that includes the scrypt proof of work code that Litecoin uses for hashes.
+In order to run P2Pool with the Magi network, you MUST build and install the
+magi m7m_module that includes the M7M proof of work code that Magi uses for hashes.
 
 Linux:
 
-    cd litecoin_scrypt
+    cd magi-hash
     sudo python setup.py install
 
 Windows (mingw):
@@ -65,7 +86,7 @@ Windows (mingw):
 
 In bash type this:
 
-    cd litecoin_scrypt
+    cd magi-hash
     C:\Python27\python.exe setup.py build --compile=mingw32 install
 
 Windows (microsoft visual c++)
@@ -75,29 +96,11 @@ In bash type this:
 
     SET VS90COMNTOOLS=%VS110COMNTOOLS%	           # For visual c++ 2012
     SET VS90COMNTOOLS=%VS100COMNTOOLS%             # For visual c++ 2010
-    cd litecoin_scrypt
+    cd magi-hash
     C:\Python27\python.exe setup.py build --compile=mingw32 install
 	
 If you run into an error with unrecognized command line option '-mno-cygwin', see this:
 http://stackoverflow.com/questions/6034390/compiling-with-cython-and-mingw-produces-gcc-error-unrecognized-command-line-o
-
-Running P2Pool:
--------------------------
-Run P2Pool with the "--net litecoin" option.
-Run your miner program, connecting to 127.0.0.1 on port 9327.
-Forward port 9338 to the host running P2Pool.
-
-Litecoin's use of ports 9332 and 9332 conflicts with P2Pool running on
-the Bitcoin network. To avoid problems, add these lines to litecoin.conf
-and restart litecoind:
-
-    rpcport=10332
-    port=10333
-
-Notes for DigiByte:
--------------------------
-Digibyte implements a custom subsidy function, that you need to build in order to successfully
-run your P2Pool node. See digibyte_subsidy/README.txt for installation details.
 
 Sponsors:
 -------------------------
@@ -110,5 +113,4 @@ License:
 -------------------------
 
 [Available here](COPYING)
-
 
