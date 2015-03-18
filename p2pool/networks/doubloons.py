@@ -1,13 +1,13 @@
 from p2pool.bitcoin import networks
 
 PARENT = networks.nets['doubloons']
-SHARE_PERIOD = 5 # seconds target spacing
-CHAIN_LENGTH = 12*60*60//5 # shares
-REAL_CHAIN_LENGTH = 12*60*60//5 # shares
+SHARE_PERIOD = 20 # seconds target spacing
+CHAIN_LENGTH = 12*60*60//20 # shares
+REAL_CHAIN_LENGTH = 12*60*60//20 # shares
 TARGET_LOOKBEHIND = 20 # blocks
 SPREAD = 30 # blocks
-IDENTIFIER = 'fe43a6b9f6924a10'.decode('hex')
-PREFIX = 'fe8f19aba6d7729a'.decode('hex')
+IDENTIFIER = 'fe00ef33b8e122a0'.decode('hex')
+PREFIX = 'e100b4e377a284e1'.decode('hex')
 P2P_PORT = 8346
 MIN_TARGET = 0
 MAX_TARGET = 2**256//2**20 - 1
