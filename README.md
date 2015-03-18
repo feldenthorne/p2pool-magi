@@ -23,7 +23,7 @@ Initial Setup for P2Pool:
 To set up P2Pool for Magi, after you have downloaded the dependencies,
 you must install the Magi hashing code for proof of work:
 
-    cd magi
+    cd magi-hash
     sudo python setup.py install
     cd ..
 
