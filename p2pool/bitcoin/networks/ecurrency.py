@@ -9,14 +9,14 @@ from p2pool.util import pack
 
 P2P_PREFIX = '336b59c1'.decode('hex')
 P2P_PORT = 8080
-ADDRESS_VERSION = 33
+ADDRESS_VERSION = 0
 RPC_PORT = 8079
 RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue('ecurrencyaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
         ))
 SUBSIDY_FUNC = lambda height: 100*100000000 >> (height + 1)//420000
 POW_FUNC = data.hash256
-BLOCK_PERIOD = 180 # s
+BLOCK_PERIOD = 600 # s
 SYMBOL = 'ISO'
 CONF_FILE_FUNC = lambda: os.path.join(os.path.join(os.environ['APPDATA'], 'ecurrency') if platform.system() == 'Windows' 
 				else os.path.expanduser('~/Library/Application Support/ecurrency/') if platform.system() == 'Darwin' 
