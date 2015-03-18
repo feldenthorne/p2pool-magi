@@ -34,11 +34,11 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
         @defer.inlineCallbacks
         def connect_p2p():
             # connect to bitcoind over bitcoin-p2p
-            print '''Testing bitcoind P2P connection to '%s:%s'...''' % (args.bitcoind_address, args.bitcoind_p2p_port)
+            print '''Testing magid P2P connection to '%s:%s'...''' % (args.bitcoind_address, args.bitcoind_p2p_port)
             factory = bitcoin_p2p.ClientFactory(net.PARENT)
             reactor.connectTCP(args.bitcoind_address, args.bitcoind_p2p_port, factory)
             def long():
-                print '''    ...taking a while. Common reasons for this include all of bitcoind's connection slots being used...'''
+                print '''    ...taking a while. Common reasons for this include all of magid's connection slots being used...'''
             long_dc = reactor.callLater(5, long)
             yield factory.getProtocol() # waits until handshake is successful
             if not long_dc.called: long_dc.cancel()
@@ -51,7 +51,7 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
         
         # connect to bitcoind over JSON-RPC and do initial getmemorypool
         url = '%s://%s:%i/' % ('https' if args.bitcoind_rpc_ssl else 'http', args.bitcoind_address, args.bitcoind_rpc_port)
-        print '''Testing bitcoind RPC connection to '%s' with username '%s'...''' % (url, args.bitcoind_rpc_username)
+        print '''Testing magid RPC connection to '%s' with username '%s'...''' % (url, args.bitcoind_rpc_username)
         bitcoind = jsonrpc.HTTPProxy(url, dict(Authorization='Basic ' + base64.b64encode(args.bitcoind_rpc_username + ':' + args.bitcoind_rpc_password)), timeout=30)
         yield helper.check(bitcoind, net)
         temp_work = yield helper.getwork(bitcoind)
@@ -85,12 +85,12 @@ def main(args, net, datadir_path, merged_urls, worker_endpoint):
             if address is not None:
                 res = yield deferral.retry('Error validating cached address:', 5)(lambda: bitcoind.rpc_validateaddress(address))()
                 if not res['isvalid'] or not res['ismine']:
-                    print '    Cached address is either invalid or not controlled by local bitcoind!'
+                    print '    Cached address is either invalid or not controlled by local magid!'
                     address = None
             
             if address is None:
-                print '    Getting payout address from bitcoind...'
-                address = yield deferral.retry('Error getting payout address from bitcoind:', 5)(lambda: bitcoind.rpc_getaccountaddress('p2pool'))()
+                print '    Getting payout address from magid...'
+                address = yield deferral.retry('Error getting payout address from magid:', 5)(lambda: bitcoind.rpc_getaccountaddress('p2pool'))()
             
             with open(address_path, 'wb') as f:
                 f.write(address)
@@ -380,7 +380,7 @@ def run():
         help='enable debugging mode',
         action='store_const', const=True, default=False, dest='debug')
     parser.add_argument('-a', '--address',
-        help='generate payouts to this address (default: <address requested from bitcoind>)',
+        help='generate payouts to this address (default: <address requested from magid>)',
         type=str, action='store', default=None, dest='address')
     parser.add_argument('--datadir',
         help='store data in this directory (default: <directory run_p2pool.py is in>/data)',
@@ -452,13 +452,13 @@ def run():
         help='connect to this address (default: 127.0.0.1)',
         type=str, action='store', default='127.0.0.1', dest='bitcoind_address')
     bitcoind_group.add_argument('--bitcoind-rpc-port', metavar='BITCOIND_RPC_PORT',
-        help='''connect to JSON-RPC interface at this port (default: %s <read from bitcoin.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.RPC_PORT) for name, net in sorted(realnets.items())),
+        help='''connect to JSON-RPC interface at this port (default: %s <read from magi.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.RPC_PORT) for name, net in sorted(realnets.items())),
         type=int, action='store', default=None, dest='bitcoind_rpc_port')
     bitcoind_group.add_argument('--bitcoind-rpc-ssl',
         help='connect to JSON-RPC interface using SSL',
         action='store_true', default=False, dest='bitcoind_rpc_ssl')
     bitcoind_group.add_argument('--bitcoind-p2p-port', metavar='BITCOIND_P2P_PORT',
-        help='''connect to P2P interface at this port (default: %s <read from bitcoin.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.P2P_PORT) for name, net in sorted(realnets.items())),
+        help='''connect to P2P interface at this port (default: %s <read from magi.conf if password not provided>)''' % ', '.join('%s:%i' % (name, net.PARENT.P2P_PORT) for name, net in sorted(realnets.items())),
         type=int, action='store', default=None, dest='bitcoind_p2p_port')
     bitcoind_group.add_argument(metavar='BITCOIND_RPCUSERPASS',
         help='bitcoind RPC interface username, then password, space-separated (only one being provided will cause the username to default to being empty, and none will cause P2Pool to read them from bitcoin.conf)',
@@ -486,13 +486,13 @@ def run():
     if args.bitcoind_rpc_password is None:
         conf_path = args.bitcoind_config_path or net.PARENT.CONF_FILE_FUNC()
         if not os.path.exists(conf_path):
-            parser.error('''Bitcoin configuration file not found. Manually enter your RPC password.\r\n'''
+            parser.error('''Magi configuration file not found. Manually enter your RPC password.\r\n'''
                 '''If you actually haven't created a configuration file, you should create one at %s with the text:\r\n'''
                 '''\r\n'''
                 '''server=1\r\n'''
                 '''rpcpassword=%x\r\n'''
                 '''\r\n'''
-                '''Keep that password secret! After creating the file, restart Bitcoin.''' % (conf_path, random.randrange(2**128)))
+                '''Keep that password secret! After creating the file, restart Magi.''' % (conf_path, random.randrange(2**128)))
         conf = open(conf_path, 'rb').read()
         contents = {}
         for line in conf.splitlines(True):
@@ -511,7 +511,7 @@ def run():
             if getattr(args, var_name) is None and conf_name in contents:
                 setattr(args, var_name, var_type(contents[conf_name]))
         if args.bitcoind_rpc_password is None:
-            parser.error('''Bitcoin configuration file didn't contain an rpcpassword= line! Add one!''')
+            parser.error('''Magi configuration file didn't contain an rpcpassword= line! Add one!''')
     
     if args.bitcoind_rpc_username is None:
         args.bitcoind_rpc_username = ''
