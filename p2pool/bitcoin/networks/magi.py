@@ -8,9 +8,9 @@ from p2pool.util import pack
 
 
 P2P_PREFIX = 'f0b9b3d6'.decode('hex') #pchmessagestart
-P2P_PORT = 19982
+P2P_PORT = 8233
 ADDRESS_VERSION = 20 #pubkey_address
-RPC_PORT = 9982
+RPC_PORT = 8232
 RPC_CHECK = defer.inlineCallbacks(lambda bitcoind: defer.returnValue(
             'Magiaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
