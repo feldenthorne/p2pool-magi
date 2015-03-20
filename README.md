@@ -32,7 +32,7 @@ Running P2Pool:
 To use P2Pool, you must be running your own local magid. For standard
 configurations, using P2Pool should be as simple as:
 
-    python run_p2pool.py
+    python run_p2pool.py --net magi
 
 Then run your miner program, connecting to 127.0.0.1 on port 8232 with any
 username and password.
@@ -41,10 +41,11 @@ A sample magi.conf file for magid is shown below:
 
     daemon=1
     server=1
+    port=8233
     rpcport=8232
     rpcallowip=127.0.0.1
     rpcuser=rpcuser
-    rpcpassword=rpcpass
+    rpcpassword=rpcpass(use something secure)
 
 If you are behind a NAT, you should enable TCP port forwarding on your
 router. Forward port 8232 to the host running P2Pool.
